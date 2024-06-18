@@ -1,6 +1,6 @@
 import { WebSocket } from "ws";
-import redisClient from './redisClient';
- 
+import redisClient from "./redisClient";
+import { error } from "console";
 
 interface Client {
   type: "driver" | "customer";
@@ -42,16 +42,22 @@ class ConnectionManager {
     }
   }
 
-  private async handleDriverMessage(driverId: string, message: any): Promise<void> {
+  private async handleDriverMessage(
+    driverId: string,
+    message: any
+  ): Promise<void> {
     console.log(`Driver ${driverId} sent data:`, message);
-    if (message.type==='locationUpdate')
-    {
-           try 
-           {
-              await re
-           } 
-    }    
-
+    if (message.type === "locationUpdate") {
+      const latitude = message.latitude;
+      const longitude = message.longitude;
+      try {
+        await redisClient.geoadd("driver", latitude, longitude);
+      } catch (error) {
+        console.error("error updating the driver location");
+      }
+    } else {
+      console.log(`driver ${driverId} sent the data`, message);
+    }
   }
 
   private handleCustomerMessage(customerId: string, message: any): void {
