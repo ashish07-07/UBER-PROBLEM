@@ -125,7 +125,7 @@ export default function DriverDashboard() {
           JSON.stringify({
             type: "register",
             clientType: "driver",
-            clientId: id, // Use the actual driver ID
+            clientId: id,
           })
         );
       };
@@ -158,7 +158,7 @@ export default function DriverDashboard() {
               JSON.stringify({
                 type: "locationUpdate",
                 clientType: "driver",
-                clientId: id, // Use the actual driver ID
+                clientId: id,
                 latitude: latitude,
                 longitude: longitude,
               })
