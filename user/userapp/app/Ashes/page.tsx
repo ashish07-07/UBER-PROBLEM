@@ -1,8 +1,9 @@
-import { UserInput } from "../components/TestingUSer";
+// import { UserInput } from "../components/TestingUSer";
+import CustomerDashboard from "../components/TestingUSer";
 export default function () {
   return (
     <div>
-      <UserInput></UserInput>
+      <CustomerDashboard></CustomerDashboard>
     </div>
   );
 }

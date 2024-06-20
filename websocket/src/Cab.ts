@@ -140,6 +140,7 @@
 
 import { WebSocket } from "ws";
 import redisClient from "./redisClient";
+import { error } from "console";
 
 interface Client {
   type: "driver" | "customer";
@@ -225,8 +226,49 @@ class ConnectionManager {
     }
   }
 
-  private handleCustomerMessage(customerId: string, message: any): void {
-    console.log(`Customer ${customerId} sent data:`, message);
+  private async handleCustomerMessage(
+    customerId: string,
+    message: any
+  ): Promise<void> {
+    if (message.type === "locationUpdate") {
+      console.log(`Customer ${customerId} sent data:`, message);
+      console.log("i am trying to add the location update to redis");
+      const { from, to, distance } = message;
+
+      try {
+        await redisClient.geoadd(
+          "customers",
+          parseFloat(from.lng),
+          parseFloat(from.lat),
+          `${customerId}`
+        );
+
+        await redisClient.geoadd(
+          "customers",
+          parseFloat(to.lng),
+          parseFloat(to.lat),
+          `${customerId}:to`
+        );
+
+        await redisClient.set(
+          `distance:${customerId}`,
+          JSON.stringify(distance),
+          "EX",
+          3600
+        ); // Set expiration time to 1 hour
+
+        console.log(
+          `Location data updated in Redis for customer ${customerId}`
+        );
+      } catch (error) {
+        console.error("error updating to redis");
+      }
+    } else {
+      console.log(
+        `Customer ${customerId} sent an unhandled message type:`,
+        message
+      );
+    }
   }
 
   getDriverSocket(driverId: string): WebSocket | undefined {

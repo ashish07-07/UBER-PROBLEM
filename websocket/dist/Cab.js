@@ -80,7 +80,25 @@ class ConnectionManager {
         });
     }
     handleCustomerMessage(customerId, message) {
-        console.log(`Customer ${customerId} sent data:`, message);
+        return __awaiter(this, void 0, void 0, function* () {
+            if (message.type === "locationUpdate") {
+                console.log(`Customer ${customerId} sent data:`, message);
+                console.log("i am trying to add the location update to redis");
+                const { from, to, distance } = message;
+                try {
+                    yield redisClient_1.default.geoadd("customers", parseFloat(from.lng), parseFloat(from.lat), `${customerId}`);
+                    yield redisClient_1.default.geoadd("customers", parseFloat(to.lng), parseFloat(to.lat), `${customerId}:to`);
+                    yield redisClient_1.default.set(`distance:${customerId}`, JSON.stringify(distance), "EX", 3600); // Set expiration time to 1 hour
+                    console.log(`Location data updated in Redis for customer ${customerId}`);
+                }
+                catch (error) {
+                    console.error("error updating to redis");
+                }
+            }
+            else {
+                console.log(`Customer ${customerId} sent an unhandled message type:`, message);
+            }
+        });
     }
     getDriverSocket(driverId) {
         return this.drivers[driverId];
