@@ -15,7 +15,7 @@ export function GoogleMapView({ center }) {
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}>
       <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
-        {/* Additional map components, like markers, can be added here */}
+        
       </GoogleMap>
     </LoadScript>
   );

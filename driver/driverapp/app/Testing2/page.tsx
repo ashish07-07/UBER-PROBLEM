@@ -16,7 +16,6 @@ export default function DriverDashboard() {
   });
 
   useEffect(() => {
-    // Wait until the session is authenticated and the id is available
     if (status === "authenticated" && id) {
       const socket = new WebSocket("ws://localhost:8080");
       console.log("got id now");

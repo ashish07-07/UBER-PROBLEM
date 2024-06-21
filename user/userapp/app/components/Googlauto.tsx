@@ -5,9 +5,6 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 
-// Ensure to import the types for the google namespace
-/// <reference types="@types/google.maps" />
-
 export function GoogleMapView() {
   const containerStyle = {
     width: "100%",
@@ -19,7 +16,7 @@ export function GoogleMapView() {
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: googleMapsApiKey,
-    libraries: ["places", "geometry"], // Include geometry library for distance calculations
+    libraries: ["places", "geometry"],
   });
 
   const [autocompleteFrom, setAutocompleteFrom] =
@@ -30,7 +27,6 @@ export function GoogleMapView() {
 
   useEffect(() => {
     if (autocompleteFrom && autocompleteTo) {
-      // Calculate distance when both autocomplete instances are loaded
       calculateDistance();
     }
   }, [autocompleteFrom, autocompleteTo]);
@@ -128,7 +124,6 @@ export function GoogleMapView() {
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
       <div style={{ width: "50%" }}>
-        {/* From location input */}
         <Autocomplete onLoad={onLoadFrom} onPlaceChanged={onPlaceChangedFrom}>
           <input
             type="text"
@@ -137,7 +132,7 @@ export function GoogleMapView() {
             style={{ width: "100%", height: "32px", boxSizing: "border-box" }}
           />
         </Autocomplete>
-        {/* To location input */}
+
         <Autocomplete onLoad={onLoadTo} onPlaceChanged={onPlaceChangedTo}>
           <input
             type="text"
@@ -151,7 +146,7 @@ export function GoogleMapView() {
             }}
           />
         </Autocomplete>
-        {/* Display distance */}
+
         {distance && (
           <div className="mt-2 text-white">Distance: {distance}</div>
         )}
@@ -161,9 +156,7 @@ export function GoogleMapView() {
           mapContainerStyle={containerStyle}
           center={coordinate}
           zoom={13}
-        >
-          {/* Additional map components, like markers, can be added here */}
-        </GoogleMap>
+        ></GoogleMap>
       </div>
     </div>
   ) : (
